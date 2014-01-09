@@ -43,12 +43,13 @@ class prr_router {
 			if (isset($found->fields['callback']) && $found->fields['callback'] != '') {
 				$match = true;
 				self::$data['callback'] = $found->fields['callback'];
-				// Set main_page to the callback name(it is the directory name under pages
+				// Set main_page to the callback name (it is the directory name under pages)
 				$_GET['main_page'] = self::$data['callback'];
 			}
 			if ($match) break;
 			array_unshift(self::$data['parameters'], array_pop($path));
 		}
+
 		// Include the routing file if any
 		$pagedir = DIR_FS_CATALOG . DIR_WS_MODULES . '/pages/' . self::$data['callback'];
 		$routefile = '/route.php';
@@ -108,15 +109,23 @@ class prr_router {
 		$sql = 'SELECT `route`,`callback`,`lang` FROM `' . PRR_ROUTING_TABLE . '` WHERE `callback` = :partial';
 		$sql = $db->bindVars($sql, ':partial', $query['main_page'], 'string');
 		$found = $db->Execute($sql);
+		$ownlang = false;
 
 		while (!$found->EOF) {
 			$route = $found->fields['route'];
 			$callback = $found->fields['callback'];
 			if ($_SESSION['languages_code'] == $found->fields['lang']) {
 				// Language specific found
+				$ownlang = true;
 				break;
 			}
 			$found->MoveNext();
+		}
+
+		if ($ownlang == false && $callback !== null) {
+			// Found a route, but in a different language... Should use the callback name as route
+			$route = $found->fields['callback'];
+			$callback = $found->fields['callback'];
 		}
 
 		// If non found, check if there is a "page" directory for the entry
@@ -212,3 +221,5 @@ class prr_router {
 if (!isset($_GET['main_page'])) {
 	prr_router::route();
 }
+
+p::err($_GET['main_page']);
