@@ -31,6 +31,16 @@ It first resolves which "module" (in includes/modules/pages/) should handle the 
 
 After the "module" has been selected, control is passed to a sub-routing class, which resides in a file in the modules directory (called routing.php). The sub-router file contains a class that is attached to the main static router class, which then decides what to do with the given path and/or query string. By default, query strings are passed through as-is so normal ZenCart or other add-on operation is not hindered.
 
+## Install notes
+
+Copy the files to your Zen Cart installation.
+
+The module is a drop-in plugin, but because there's no notifier in zen_href_link() (the Zen Cart "API" for link generation), one core file needs to be edited:
+
+**Add a line to the end of zen_href_link() function, just before the return statement at *includes/functions/html_output.php* **
+
+> $link = prr_router::link($link); // PRR: Hook for routing
+
 ## Support
 
 For support, please contact me at *p@prr.fi*
