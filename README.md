@@ -37,9 +37,9 @@ Copy the files to your Zen Cart installation.
 
 The module is a drop-in plugin, but because there's no notifier in zen_href_link() (the Zen Cart "API" for link generation), one core file needs to be edited:
 
-**Add a line to the end of zen_href_link() function, just before the return statement at *includes/functions/html_output.php* **
+**Add a line to the end of zen_href_link() function, just before the return statement at** *includes/functions/html_output.php*
 
-> $link = prr_router::link($link); // PRR: Hook for routing
+	$link = prr_router::link($link); // PRR: Hook for routing
 
 ## Support
 
